@@ -50,6 +50,7 @@ Menu::Menu(std::string text) : headerText{ text } {
 void Menu::start() {
 	cursorLoc = 0;
 	bool exit = false;
+
 	while (!exit) {
 		if (updateScreen) drawScreen();
 
@@ -190,5 +191,6 @@ Custom::Custom(std::string header, void(*lambda)())
 
 void Custom::start() {
 	std::system("CLS");
+	std::cout << headerText << std::endl << std::endl;
 	lambdaFunc();
 }
