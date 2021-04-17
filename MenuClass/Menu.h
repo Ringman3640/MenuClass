@@ -34,6 +34,8 @@ public:
 	void addVariableEntry(std::string text, int &variable);
 	void addVariableEntry(std::string text, int &variable, Screen &entryAction);
 
+	void exitAction(void(*func)());
+
 private:
 	struct Entry {
 		std::string entryText;
@@ -47,6 +49,7 @@ private:
 	std::vector<Entry> menuEntries;
 	std::vector<Screen*> subScreens;
 	std::string headerText;
+	void(*postExecute)() = []() { return; };
 	int entryCount = 0;
 	int cursorLoc = 0;
 	int exitLoc = -1;

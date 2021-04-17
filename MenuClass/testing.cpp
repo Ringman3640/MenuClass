@@ -1,4 +1,5 @@
 #include "Menu.h"
+#include <windows.h>
 
 int main() {
 	int savedSpeed = 5, savedHeight = 10;
@@ -21,6 +22,11 @@ int main() {
 	startScreen.addVariableEntry("Current Speed: ", savedSpeed, speed);
 	startScreen.addStaticEntry("Credits", credits);
 	startScreen.addStaticEntry("Custom Screen Test", customTest);
+
+	startScreen.exitAction([]() {
+		std::cout << "Testing Exit action for 5 seconds . . .";
+		Sleep(5000);
+		});
 
 	options.addStaticEntry("Op 1");
 	options.addStaticEntry("Op 2");

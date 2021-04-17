@@ -79,6 +79,8 @@ void Menu::start() {
 		}
 	}
 	std::system("CLS");
+
+	postExecute();
 }
 
 void Menu::drawScreen() {
@@ -122,6 +124,10 @@ void Menu::addVariableEntry(std::string text, int& variable, Screen &entryAction
 	menuEntries.push_back(Entry(text, true, &variable));
 	subScreens.push_back(&entryAction);
 	++entryCount;
+}
+
+void Menu::exitAction(void(*func)()) {
+	postExecute = func;
 }
 
 
