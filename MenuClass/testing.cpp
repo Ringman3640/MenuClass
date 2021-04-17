@@ -5,8 +5,8 @@ int main() {
 	int savedSpeed = 5, savedHeight = 10;
 	Menu startScreen("MY TEST");
 	Menu options("MY TEST > Options");
-	Modifier speed(&savedSpeed, "MY TEST > Options > Change Speed");
-	Modifier height(&savedHeight, "MY TEST > Options > Change Height");
+	Modifier speed(savedSpeed, "MY TEST > Options > Change Speed");
+	Modifier height(savedHeight, "MY TEST > Options > Change Height");
 	Text credits("MY TEST > Credits");
 	Custom customTest("Custom Test", []() {
 		std::cout << "Entered Test, press Enter to return . . . \n";
