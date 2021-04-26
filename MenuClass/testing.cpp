@@ -17,6 +17,15 @@ int main() {
 	startScreen.setUp('W');
 	startScreen.setDown('S');
 
+	startScreen.drawAction([]() {
+		std::cout << std::endl;
+		std::cout << " _______   _______    ______   _______ " << std::endl;
+		std::cout << "    |      |          |           |    " << std::endl;
+		std::cout << "    |      |____      |_____      |    " << std::endl;
+		std::cout << "    |      |                |     |    " << std::endl;
+		std::cout << "    |      |______     _____|     |    " << std::endl;
+		});
+
 	startScreen.addExit("Start");
 	startScreen.addStaticEntry("Options", options);
 	startScreen.addVariableEntry("Current Speed: ", savedSpeed, speed);
