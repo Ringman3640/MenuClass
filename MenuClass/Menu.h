@@ -94,6 +94,8 @@ class Custom : public Screen {
 public:
 	Custom(std::string header, void(*lambda)() = [] { return; });
 
+	void setAction(void(*func)());
+
 	void start();
 
 private:

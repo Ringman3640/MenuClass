@@ -213,3 +213,7 @@ void Custom::start() {
 	std::cout << headerText << std::endl << std::endl;
 	lambdaFunc();
 }
+
+void Custom::setAction(void(*func)()) {
+	lambdaFunc = func;
+}
