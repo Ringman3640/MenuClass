@@ -3,6 +3,7 @@
 #include <iostream>
 #include <windows.h>
 #include <vector>
+#include <variant>
 
 class Screen {
 public:
@@ -33,6 +34,10 @@ public:
 	void addStaticEntry(std::string text, Screen &entryAction);
 	void addVariableEntry(std::string text, int &variable);
 	void addVariableEntry(std::string text, int &variable, Screen &entryAction);
+	void addVariableEntry(std::string text, double &variable);
+	void addVariableEntry(std::string text, double &variable, Screen& entryAction);
+	void addVariableEntry(std::string text, std::string &variable);
+	void addVariableEntry(std::string text, std::string &variable, Screen& entryAction);
 
 	void startAction(void(*func)());
 	void drawAction(void(*func)());
@@ -41,11 +46,13 @@ public:
 private:
 	struct Entry {
 		std::string entryText;
-		int *entryVal;
+		std::variant<int*, double*, std::string*> entryVal;
 		bool isVar;
 
-		Entry(std::string text, bool isVar = false, int *val = nullptr) 
-			: entryText{ text }, entryVal{ val }, isVar{ isVar } { }
+		Entry(std::string text) : entryText{ text }, isVar{ false } { }
+		Entry(std::string text, int *val) : entryText{ text }, entryVal{ val }, isVar{ true } { }
+		Entry(std::string text, double *val) : entryText{ text }, entryVal{ val }, isVar{ true } { }
+		Entry(std::string text, std::string *val) : entryText{ text }, entryVal{ val }, isVar{ true } { }
 	};
 
 	std::vector<Entry> menuEntries;
@@ -58,21 +65,27 @@ private:
 	int cursorLoc = 0;
 	int exitLoc = -1;
 	bool updateScreen = true;
+
+	void outputVal(std::variant<int*, double*, std::string*> inVariant);
 };
 
 
 class Modifier : public Screen {
 public:
 	Modifier(int &inValue, std::string header, std::string text = "Enter new value: ");
+	Modifier(double &inValue, std::string header, std::string text = "Enter new value: ");
+	Modifier(std::string &inValue, std::string header, std::string text = "Enter new value: ");
 
 	void start();
 	void drawScreen();
 
 private:
-	int *value;
+	std::variant<int*, double*, std::string*> value;
 	std::string headerText;
 	std::string modifierText;
 };
+
+std::istream& operator >> (std::istream& is, std::variant<int*, double*, std::string*> variant);
 
 
 class Text : public Screen {

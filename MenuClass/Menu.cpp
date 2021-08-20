@@ -95,7 +95,7 @@ void Menu::drawScreen() {
 	for (int i = 0; i < entryCount; ++i) {
 		if (i == cursorLoc) std::cout << " > ";
 		std::cout << menuEntries[i].entryText;
-		if (menuEntries[i].isVar) std::cout << *menuEntries[i].entryVal;
+		if (menuEntries[i].isVar) outputVal(menuEntries[i].entryVal);
 		std::cout << std::endl;
 	}
 
@@ -110,23 +110,46 @@ void Menu::addExit(std::string text) {
 }
 
 void Menu::addStaticEntry(std::string text) {
-	menuEntries.push_back(text);
+	Entry temp = Entry(text);
+	menuEntries.push_back(temp);
 	subScreens.push_back(nullptr);
 	++entryCount;
 }
 void Menu::addStaticEntry(std::string text, Screen &entryAction) {
-	menuEntries.push_back(text);
+	menuEntries.push_back(Entry(text));
 	subScreens.push_back(&entryAction);
 	++entryCount;
 }
 
 void Menu::addVariableEntry(std::string text, int& variable) {
-	menuEntries.push_back(Entry(text, true, &variable));
+	menuEntries.push_back(Entry(text, &variable));
 	subScreens.push_back(nullptr);
 	++entryCount;
 }
 void Menu::addVariableEntry(std::string text, int& variable, Screen &entryAction) {
-	menuEntries.push_back(Entry(text, true, &variable));
+	menuEntries.push_back(Entry(text, &variable));
+	subScreens.push_back(&entryAction);
+	++entryCount;
+}
+
+void Menu::addVariableEntry(std::string text, double& variable) {
+	menuEntries.push_back(Entry(text, &variable));
+	subScreens.push_back(nullptr);
+	++entryCount;
+}
+void Menu::addVariableEntry(std::string text, double& variable, Screen& entryAction) {
+	menuEntries.push_back(Entry(text, &variable));
+	subScreens.push_back(&entryAction);
+	++entryCount;
+}
+
+void Menu::addVariableEntry(std::string text, std::string& variable) {
+	menuEntries.push_back(Entry(text, &variable));
+	subScreens.push_back(nullptr);
+	++entryCount;
+}
+void Menu::addVariableEntry(std::string text, std::string& variable, Screen& entryAction) {
+	menuEntries.push_back(Entry(text, &variable));
 	subScreens.push_back(&entryAction);
 	++entryCount;
 }
@@ -143,26 +166,37 @@ void Menu::exitAction(void(*func)()) {
 	postExecute = func;
 }
 
+//Menu Class Private
+void Menu::outputVal(std::variant<int*, double*, std::string*> inVariant) {
+	std::visit([](auto val) { std::cout << *val; }, inVariant);
+}
+
 
 //Modifier Class
 Modifier::Modifier(int &inValue, std::string header, std::string text)
 	:value{ &inValue }, headerText { header }, modifierText{ text } {
 
 }
+Modifier::Modifier(double &inValue, std::string header, std::string text)
+	: value{ &inValue }, headerText{ header }, modifierText{ text } {
+
+}
+Modifier::Modifier(std::string &inValue, std::string header, std::string text)
+	: value{ &inValue }, headerText{ header }, modifierText{ text } {
+
+}
 
 void Modifier::start() {
-	int inputVal;
+	std::string dataTypes[3] = { "an integer", "a double", "a string" };
 	drawScreen();
-	
-	while (!(std::cin >> inputVal)) {
-		std::cout << std::endl;
-		std::cout << "Invalid value type, enter an integer value: ";
+	while (!(std::cin >> value)) {
+		std::cout << "Invalid input type; enter ";
+		std::cout << dataTypes[value.index()];
+		std::cout << " value: ";
 		std::cin.clear();
 		std::cin.ignore(1000, '\n');
 	}
 	std::cin.ignore(1000, '\n');
-
-	*value = inputVal;
 }
 
 void Modifier::drawScreen() {
@@ -170,8 +204,15 @@ void Modifier::drawScreen() {
 
 	std::cout << headerText;
 	std::cout << std::endl << std::endl;
-	std::cout << "Current value: " << *value << std::endl;
+	std::cout << "Current value: ";
+	std::visit([](auto val) { std::cout << *val; }, value);
+	std::cout << std::endl;
 	std::cout << modifierText;
+}
+
+std::istream& operator >> (std::istream& is, std::variant<int*, double*, std::string*> variant) {
+	std::visit([](auto val) { std::cin >> *val; }, variant);
+	return is;
 }
 
 

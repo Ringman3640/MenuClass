@@ -3,10 +3,14 @@
 
 int main() {
 	int savedSpeed = 5, savedHeight = 10;
+	double savedMultiplier = 1.5;
+	std::string savedName = "Franz";
 	Menu startScreen("MY TEST");
 	Menu options("MY TEST > Options");
 	Modifier speed(savedSpeed, "MY TEST > Options > Change Speed");
 	Modifier height(savedHeight, "MY TEST > Options > Change Height");
+	Modifier multiplier(savedMultiplier, "MY TEST > Options > Change Multiplier");
+	Modifier name(savedName, "MY TEST > Options > Change Name");
 	Text credits("MY TEST > Credits");
 	Custom customTest("Custom Test", []() {
 		std::cout << "Entered Test, press Enter to return . . . \n";
@@ -43,6 +47,8 @@ int main() {
 	options.addStaticEntry("Op 4");
 	options.addVariableEntry("Current Speed: ", savedSpeed, speed);
 	options.addVariableEntry("Current Height: ", savedHeight, height);
+	options.addVariableEntry("Change Multiplier: ", savedMultiplier, multiplier);
+	options.addVariableEntry("Change Name: ", savedName, name);
 	options.addExit("Return");
 
 	credits.setText("This is a test of a credits screen. Blah blah blah blah..... \n");
